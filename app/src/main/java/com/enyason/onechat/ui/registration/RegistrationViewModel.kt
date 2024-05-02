@@ -27,6 +27,7 @@ class RegistrationViewModel @Inject constructor(
         viewModelScope.launch {
             val request = RegistrationRequest(email, fullName, username, password)
             val response = oneChatApi.register(request)
+            println(response)
             if (response.success) {
                 navigationChannel.send(NavigationEvent.RegisterNavigationEvent)
             }

@@ -32,10 +32,10 @@ fun RegistrationScreen(navController: NavHostController) {
 
     val viewModel = hiltViewModel<RegistrationViewModel>()
 
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var username by remember { mutableStateOf("") }
-    var fullname by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("loveotudor@gmail.com") }
+    var password by remember { mutableStateOf("test") }
+    var username by remember { mutableStateOf("lamoure") }
+    var fullname by remember { mutableStateOf("Love Otudor") }
 
     observeAsEvents(viewModel.navigationFlow) { event ->
         if (event is NavigationEvent.RegisterNavigationEvent) {
@@ -86,14 +86,16 @@ fun RegistrationScreen(navController: NavHostController) {
         // Password text field
         OutlinedTextField(
             value = password,
-            onValueChange = { password = it},
+            onValueChange = { password = it },
             label = { Text("Password") },
             modifier = Modifier.fillMaxWidth()
         )
 
         // Create account button
         Button(
-            onClick = { },
+            onClick = {
+                viewModel.register(email, password, username, fullname)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp), // Optional padding

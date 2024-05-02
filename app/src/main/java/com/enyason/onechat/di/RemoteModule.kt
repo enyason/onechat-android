@@ -51,10 +51,7 @@ object RemoteModule {
     @Provides
     fun provideOneChatApi(okHttpClient: OkHttpClient): OneChatApi {
         return Retrofit.Builder().client(okHttpClient)
-            .baseUrl(
-                "http://127.0.0.1:8001/"
-//                "https://onechat-api.azurewebsites.net/"
-            )
+            .baseUrl( "https://onechat-api.azurewebsites.net/")
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(OneChatApi::class.java)
     }
