@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.enyason.onechat.data.ApplicationDataStore
 import com.enyason.onechat.ui.chatroom.ChatRoomScreen
 import com.enyason.onechat.ui.login.LogInScreen
 import com.enyason.onechat.ui.onboarding.OnboardingScreen
@@ -15,19 +16,25 @@ import com.enyason.onechat.ui.rooms.RoomsScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainApp() {
+fun MainApp(dataStore: ApplicationDataStore) {
     val navController = rememberNavController()
     Scaffold(
     ) {
         // Navigation destinations
-        NavHost(navController = navController, startDestination = Screen.Onboarding.route) {
+        val initialRoute = when {
+            dataStore.getToken()?.accessToken != null -> Screen.Rooms.route
+            else -> Screen.Onboarding.route
+        }
+
+        NavHost(navController = navController, startDestination = initialRoute) {
             composable(route = Screen.Onboarding.route) { OnboardingScreen(navController) }
             composable(route = Screen.Login.route) { LogInScreen(navController) }
             composable(route = Screen.Register.route) { RegistrationScreen(navController) }
             composable(route = Screen.Rooms.route) { RoomsScreen(navController) }
-            composable(route = "room_chat/{roomId}") {backStackEntry->
+            composable(route = "room_chat/{roomId}") { backStackEntry ->
                 val roomId = backStackEntry.arguments?.getString("roomId")
-                ChatRoomScreen(navController,roomId) }
+                ChatRoomScreen(navController, roomId)
+            }
         }
     }
 }
@@ -38,5 +45,5 @@ sealed class Screen(val route: String) {
     data object Login : Screen("login")
     data object Register : Screen("register")
     data object Rooms : Screen("rooms")
-    data class RoomChat(val roomId: String) : Screen("room_chat/{$roomId}")
+    data class RoomChat(val roomId: String) : Screen("room_chat/$roomId")
 }

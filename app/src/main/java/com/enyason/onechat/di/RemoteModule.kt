@@ -29,9 +29,12 @@ object RemoteModule {
         return OkHttpClient.Builder().addInterceptor(interceptor)
             .addInterceptor { chain ->
                 val token = dataStore.getToken()?.accessToken
+                println("Token chain = $token")
                 val newRequest = chain.request().newBuilder().apply {
                     addHeader("accept", "application/json")
-                    addHeader("Authorization", "Bearer $token")
+                    token?.let {
+                        addHeader("Authorization", "Bearer $token")
+                    }
                 }.build()
                 chain.proceed(newRequest)
             }
@@ -51,7 +54,7 @@ object RemoteModule {
     @Provides
     fun provideOneChatApi(okHttpClient: OkHttpClient): OneChatApi {
         return Retrofit.Builder().client(okHttpClient)
-            .baseUrl( "https://onechat-api.azurewebsites.net/")
+            .baseUrl("https://onechat-api.azurewebsites.net/")
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(OneChatApi::class.java)
     }

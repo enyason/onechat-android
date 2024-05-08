@@ -25,12 +25,18 @@ class RegistrationViewModel @Inject constructor(
 
     fun register(email: String, password: String, username: String, fullName: String) {
         viewModelScope.launch {
-            val request = RegistrationRequest(email, fullName, username, password)
-            val response = oneChatApi.register(request)
-            println(response)
-            if (response.success) {
-                navigationChannel.send(NavigationEvent.RegisterNavigationEvent)
+            try {
+                val request = RegistrationRequest(email, fullName, username, password)
+                val response = oneChatApi.register(request)
+                println(response)
+                if (response.success) {
+                    navigationChannel.send(NavigationEvent.RegisterNavigationEvent)
+                }
+
+            } catch (error: Exception) {
+                println("API Error: ${error.message}")
             }
+
         }
     }
 }

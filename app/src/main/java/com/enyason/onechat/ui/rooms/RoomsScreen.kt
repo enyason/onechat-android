@@ -13,6 +13,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -26,6 +27,8 @@ import com.enyason.onechat.ui.Screen
 fun RoomsScreen(navController: NavHostController) {
     val viewModel = hiltViewModel<RoomsViewModel>()
     val state = viewModel.rooms.collectAsState()
+
+    LaunchedEffect(Unit) { viewModel.fetchRooms() }
 
     RoomsList(rooms = state.value) { roomid ->
         navController.navigate(Screen.RoomChat(roomid).route)

@@ -26,8 +26,8 @@ import com.enyason.onechat.ui.navigation.observeAsEvents
 @Composable
 fun LogInScreen(navController: NavHostController) {
 
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("nuel@gmail.com") }
+    var password by remember { mutableStateOf("test") }
 
     val viewModel = hiltViewModel<LoginViewModel>()
 

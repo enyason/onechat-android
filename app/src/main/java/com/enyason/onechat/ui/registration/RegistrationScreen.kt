@@ -32,10 +32,10 @@ fun RegistrationScreen(navController: NavHostController) {
 
     val viewModel = hiltViewModel<RegistrationViewModel>()
 
-    var email by remember { mutableStateOf("loveotudor@gmail.com") }
+    var email by remember { mutableStateOf("nuel@gmail.com") }
     var password by remember { mutableStateOf("test") }
-    var username by remember { mutableStateOf("lamoure") }
-    var fullname by remember { mutableStateOf("Love Otudor") }
+    var username by remember { mutableStateOf("nuel") }
+    var fullname by remember { mutableStateOf("Emmanuel Enya") }
 
     observeAsEvents(viewModel.navigationFlow) { event ->
         if (event is NavigationEvent.RegisterNavigationEvent) {

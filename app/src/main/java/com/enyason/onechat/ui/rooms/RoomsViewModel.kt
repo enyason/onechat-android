@@ -27,10 +27,15 @@ class RoomsViewModel @Inject constructor(
 
     fun fetchRooms() {
         viewModelScope.launch {
-            val response = oneChatApi.getRooms()
-            if (response.success) {
-                _rooms.emit(response.data)
+            try {
+                val response = oneChatApi.getRooms()
+                if (response.success) {
+                    _rooms.emit(response.data)
+                }
+            } catch (error: Exception) {
+                println("API Error: ${error.message}")
             }
+
         }
     }
 }

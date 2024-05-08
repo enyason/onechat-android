@@ -39,6 +39,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import io.ktor.network.sockets.connect
 import kotlinx.coroutines.launch
 
 
@@ -53,25 +54,29 @@ fun ChatRoomScreen(navController: NavHostController, roomId: String?) {
     val listState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
-        roomId?.let { viewModel.getMessages(roomId) }
+        roomId?.let {
+            viewModel.run {
+                getMessages(roomId)
+                wsConnect(roomId)
+            }
+        }
     }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = 80.dp)
     ) {
         ChatList(
             messages.value,
             listState,
             Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(start = 16.dp, end = 16.dp, bottom = 100.dp)
         )
 
         MessageInput(
             onSendMessage = { inputText ->
-                // TODO() send message to gemini
+                viewModel.sendMessageToRoom(inputText)
             },
             resetScroll = {
                 coroutineScope.launch {
@@ -80,6 +85,7 @@ fun ChatRoomScreen(navController: NavHostController, roomId: String?) {
             },
             Modifier
                 .fillMaxWidth()
+                .align(Alignment.BottomCenter)
         )
     }
 }
@@ -107,20 +113,19 @@ fun ChatList(
 fun ChatBubbleItem(
     chatMessage: ChatMessage
 ) {
-    val isUserMessage = chatMessage.participant == Participant.THIS_USER
 
-    val backgroundColor = when (chatMessage.participant) {
-        Participant.THIS_USER -> MaterialTheme.colorScheme.primaryContainer
-        Participant.OTHER_USER -> MaterialTheme.colorScheme.tertiaryContainer
+    val backgroundColor = when {
+        chatMessage.isUserMessage -> MaterialTheme.colorScheme.primaryContainer
+        else -> MaterialTheme.colorScheme.tertiaryContainer
     }
 
-    val bubbleShape = if (isUserMessage) {
+    val bubbleShape = if (chatMessage.isUserMessage) {
         RoundedCornerShape(4.dp, 20.dp, 20.dp, 20.dp)
     } else {
         RoundedCornerShape(20.dp, 4.dp, 20.dp, 20.dp)
     }
 
-    val horizontalAlignment = if (isUserMessage) {
+    val horizontalAlignment = if (chatMessage.isUserMessage) {
         Alignment.Start
     } else {
         Alignment.End
@@ -133,7 +138,7 @@ fun ChatBubbleItem(
             .fillMaxWidth()
     ) {
         Text(
-            text = chatMessage.participant.name,
+            text = chatMessage.participant,
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier.padding(bottom = 4.dp)
         )

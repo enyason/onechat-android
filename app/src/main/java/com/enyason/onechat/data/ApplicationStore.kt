@@ -17,6 +17,7 @@ class ApplicationDataStore @Inject constructor(
     fun saveUser(user: User) {
         sharedPreferences.edit {
             val gsonString = gson.toJson(user, User::class.java)
+            println("user string = $gsonString")
             putString(KEY_USER, gsonString)
         }
     }
@@ -26,15 +27,17 @@ class ApplicationDataStore @Inject constructor(
         return gson.fromJson(jsonString, User::class.java)
     }
 
-    fun saveToken(user: Token) {
+    fun saveToken(token: Token) {
         sharedPreferences.edit {
-            val gsonString = gson.toJson(user, Token::class.java)
+            val gsonString = gson.toJson(token, Token::class.java)
+            println("token string = $gsonString")
             putString(KEY_TOKEN, gsonString)
         }
     }
 
     fun getToken(): Token? {
         val jsonString = sharedPreferences.getString(KEY_TOKEN, null)
+        println("token string = $jsonString")
         return gson.fromJson(jsonString, Token::class.java)
     }
 

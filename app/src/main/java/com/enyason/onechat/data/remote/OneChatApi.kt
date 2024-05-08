@@ -15,8 +15,8 @@ import retrofit2.http.Query
 
 interface OneChatApi {
 
-    @GET("api/chat/rooms/{room_id}messages")
-    suspend fun getRoomMessages(@Query("room_id") roomId: String): APIResponse<List<Message>>
+    @GET("api/chat/rooms/{room_id}/messages")
+    suspend fun getRoomMessages(@Path("room_id") roomId: String): APIResponse<List<Message>>
 
     @GET("api/chat/rooms")
     suspend fun getRooms(): APIResponse<List<Room>>

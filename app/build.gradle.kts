@@ -1,4 +1,3 @@
-
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -78,8 +77,12 @@ dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
     implementation("com.google.firebase:firebase-messaging")
-    implementation("io.ktor:ktor-client-android:1.6.4")
-    implementation("io.ktor:ktor-client-websockets:1.6.4")
+
+    val ktor_version = "2.3.10"
+    implementation("io.ktor:ktor-client-android:2.3.10")
+    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-client-cio:$ktor_version")
+    implementation("io.ktor:ktor-client-websockets:$ktor_version")
 
 
     implementation(libs.hilt.android)
